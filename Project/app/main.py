@@ -35,7 +35,7 @@ app = FastAPI()
 #app.mount("/static", StaticFiles(directory="/app/static"), name="static")
 
 #Local
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/static", StaticFiles(directory="/app/static"), name="static")
 app.mount("/Reportes", StaticFiles(directory="/app/Archivos/Reportes"), name="Reportes")
 app.mount("/Videos", StaticFiles(directory="/app/Archivos/Videos"), name="Videos")
 
