@@ -55,8 +55,8 @@ def get_frontend():
     return FileResponse("index.html")
 
 # Crear carpeta para reportes y videos
-os.makedirs("Archivos/Reportes", exist_ok=True)
-os.makedirs("Archivos/Videos", exist_ok=True)
+os.makedirs("/app/Archivos/Reportes", exist_ok=True)
+os.makedirs("/app/Archivos/Videos", exist_ok=True)
 
 
 # Variables globales para gestionar el análisis
@@ -202,8 +202,8 @@ async def save_analysis(
     #timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     timestamp = datetime.now().strftime("%d_%m_%Y")   
     
-    report_path = f"Archivos/Reportes/RP_{Input_Name}_{timestamp}.csv"
-    video_path = f"Archivos/Videos/VD_{Input_Name}_{timestamp}.webm"
+    report_path = f"/app/Archivos/Reportes/RP_{Input_Name}_{timestamp}.csv"
+    video_path = f"/app/Archivos/Videos/VD_{Input_Name}_{timestamp}.webm"
     
     #video_path = f"Videos/{video.filename}"#captured_video.webm
     
@@ -272,13 +272,13 @@ async def save_analysis(
 
 @app.get("/list-reports/")
 async def list_reports():
-    reports = os.listdir("Archivos/Reportes/")
-    videos = os.listdir("Archivos/Videos/")
+    reports = os.listdir("/app/Archivos/Reportes/")
+    videos = os.listdir("/app/Archivos/Videos/")
     return {"reports": reports, "videos": videos}
 
 
 # Ruta donde se almacenan los reportes
-REPORTS_DIR = Path("Archivos/Reportes")
+REPORTS_DIR = Path("/app/Archivos/Reportes")
 
 @app.get("/get-report/{report_name}")
 async def get_report(report_name: str):
