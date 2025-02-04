@@ -307,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function startWebSocket() {
-        ws = new WebSocket(`ws://${path2}:8000/ws`);
+        ws = new WebSocket(`wss://${path2}/ws`);
         
         ws.onmessage = event => {
             const data = JSON.parse(event.data);
@@ -401,7 +401,7 @@ function startStream() {
                 const frame = canvas.toDataURL("image/jpeg");
                 ws.send(frame);
             }
-        }, 2000); // Enviar frames cada 200ms
+        }, 200); // Enviar frames cada 200ms
     });
 }
 
@@ -612,7 +612,7 @@ function stopRecording() {
         formData.append("video", videoBlob, "captured_video.webm");
         formData.append("patient_name", patient_name);
 
-        fetch(`${path}:8000/save-analysis/`, {
+        fetch(`${path}/save-analysis/`, {
             method: "POST",
             body: formData,
         })
@@ -630,7 +630,7 @@ function stopRecording() {
 
 // Obtener reportes desde el servidor
 function fetchReports() {
-    fetch(`${path}:8000/list-reports/`)
+    fetch(`${path}/list-reports/`)
         .then(response => response.json())
         .then(data => {
             const videoColumn = document.querySelector("#video-column");
@@ -648,7 +648,7 @@ function fetchReports() {
                 const card = document.createElement("div");
                 card.classList.add("card");
                 card.innerHTML = `
-                    <a href="${path}:8000/Videos/${video}" target="_blank">${video}</a>
+                    <a href="${path}/Videos/${video}" target="_blank">${video}</a>
                 `;
                 videoColumn.appendChild(card);
             });
