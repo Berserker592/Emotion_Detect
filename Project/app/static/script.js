@@ -3,7 +3,7 @@ let isAnalyzing = true;
 let mediaRecorder;
 let recordedChunks = [];
 let isRecording = false; // Estado para controlar la grabación
-let path = 'http://riobambalimpia.com';
+let path = 'https://riobambalimpia.com';
 let path2 = 'riobambalimpia.com';
 
 //let path = 'http://127.0.0.1';
@@ -533,7 +533,7 @@ function playStream(){
 // Función para obtener la ubicación de la cara desde el servidor
 async function fetchFaceLocation() {
     try {
-        const response = await fetch("http://127.0.0.1:8000/face-location");
+        const response = await fetch(`${path}/face-location`);
         const data = await response.json();
         if (data.Ubicacion.length === 4) {
             return data.Ubicacion; // Devolver la ubicación actualizada
