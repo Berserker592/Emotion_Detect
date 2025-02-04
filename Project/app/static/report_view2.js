@@ -1,5 +1,5 @@
 //let path = 'http://127.0.0.1';
-let path = 'http://172.31.89.117';
+let path = 'http://44.206.224.153';
     
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
