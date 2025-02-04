@@ -4,6 +4,8 @@ let mediaRecorder;
 let recordedChunks = [];
 let isRecording = false; // Estado para controlar la grabación
 let path = 'http://44.206.224.153';
+let path2 = '44.206.224.153';
+
 //let path = 'http://127.0.0.1';
 
 const emotionData = {};
@@ -305,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function startWebSocket() {
-        ws = new WebSocket("ws://127.0.0.1:8000/ws");
+        ws = new WebSocket(`ws://${path2}:8000/ws`);
         
         ws.onmessage = event => {
             const data = JSON.parse(event.data);
