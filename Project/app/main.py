@@ -18,13 +18,13 @@ from data_processing.Emotion_detect import emotion_analize
 #import subprocess
 
 # Ejecutar el comando 'pwd' en el sistema
-#current_directory = subprocess.run(["pwd"], capture_output=True, text=True)
-#list_directory = subprocess.run(["ls"], capture_output=True, text=True)
+current_directory = subprocess.run(["pwd"], capture_output=True, text=True)
+list_directory = subprocess.run(["ls"], capture_output=True, text=True)
 
 
 # Mostrar el resultado
-#print(current_directory.stdout.strip())
-#print(list_directory.stdout.strip())
+print(current_directory.stdout.strip())
+print(list_directory.stdout.strip())
 
 
 app = FastAPI()
