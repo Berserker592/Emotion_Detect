@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from data_processing.Facial_Detect import Deteccion
 from data_processing.Emotion_detect import emotion_analize
 
-#import subprocess
+import subprocess
 
 # Ejecutar el comando 'pwd' en el sistema
 current_directory = subprocess.run(["pwd"], capture_output=True, text=True)
