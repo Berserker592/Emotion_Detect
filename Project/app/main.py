@@ -12,8 +12,8 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pathlib import Path
 import matplotlib.pyplot as plt
-from app.data_processing.Facial_Detect import Deteccion
-from app.data_processing.Emotion_detect import emotion_analize
+from data_processing.Facial_Detect import Deteccion
+from data_processing.Emotion_detect import emotion_analize
 
 #import subprocess
 
