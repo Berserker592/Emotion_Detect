@@ -3,7 +3,7 @@ let isAnalyzing = true;
 let mediaRecorder;
 let recordedChunks = [];
 let isRecording = false; // Estado para controlar la grabación
-let path = 'http://172.31.89.117;
+let path = 'http://172.31.89.117';
 //let path = 'http://127.0.0.1';
 
 const emotionData = {};
