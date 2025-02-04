@@ -47,7 +47,7 @@ async def Deteccion(frame_data: str):
         for (x, y, w, h) in faces_rect:
             # Recortar la imagen para obtener solo la región de la cara
             faces_roi = frame[y:y+h, x:x+w]
-            mostrar_frame(None,faces_roi)
+            #mostrar_frame(None,faces_roi)
             #mostrar_frame(frame,faces_roi)
             Ubicacion = [x,y,w,h]
             Ubicacion = [int(i) for i in Ubicacion]
