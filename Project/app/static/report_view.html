@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+
+    <title>Reporte Detallado</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Reporte Detallado</h1><span id="Reportename"></span>
+        </header>
+    </div>
+
+    <div>
+        <button onclick="goBackToIndex()" class="btn">
+            Regresar
+        </div>
+    </button><br>
+
+    <div id="charts-container">
+        <canvas id="emotionChart" class="chart"></canvas><br>
+        <canvas id="emotionPieChart" class="chart"></canvas><br>
+        
+        <div id="details">
+            <p><strong>Emoción predominante:</strong> <span id="dominantEmotion"></span></p><br>
+            <p><strong>Cambios abruptos detectados:</strong> <span id="abruptChanges"></span></p>
+        </div>
+    </div>
+    
+    
+    <script src="report_view2.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #166d96, #1d1d1f);
+    color: #fff;
+    overflow-x: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    gap: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    background: -webkit-linear-gradient(45deg, #060606, #ffffff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.2rem;
+    color: #ddd;
+}
+
+.video-container {
+    background: #2a2a2a;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    width: 85%;
+    max-width: 900px;
+    margin: 20px 0;
+}
+
+video {
+    width: 100%;
+    height: auto;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.btn {
+    background: #166d96;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background: #274d6e;
+    transform: scale(1.05);
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    width: 85%;
+}
+
+.chart {
+    background: #f2eeee;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+}
+
+.chart:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.chart canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.report-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.column {
+    flex: 1;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    overflow-y: auto;
+    max-height: 80vh; /* Para evitar que desborde */
+}
+
+.column h2 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.card {
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.card a:hover {
+    text-decoration: underline;
+}
+
+.line {
+    position: absolute;
+    background-color: rgb(43, 98, 34);
+    width: 100px; /* Longitud de la línea */
+    height: 3px;  /* Grosor de la línea */
+}
+
+#line1 {
+    top: 50px;
+    left: 50px;
+}
+
+#line2 {
+    top: 100px;
+    left: 100px;
+    transform: rotate(45deg); /* Rotación de la línea */
+}
+
+#line3 {
+    top: 50px;
+    left: 50px;
+}
+#line4 {
+    top: 50px;
+    left: 50px;
+}
+
+.rectangle {
+    position: absolute;
+    /*background-color: rgb(43, 98, 34);*/
+    border: 2px solid black;
+    width: 100px; /* Longitud de la línea */
+    height: 120px;  /* Grosor de la línea */
+}
