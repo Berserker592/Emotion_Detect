@@ -24,8 +24,7 @@ app = FastAPI()
 
 #Servidor
 #app.mount("/static", StaticFiles(directory="/app/static"), name="static")
-os.makedirs("/app/Archivos/Reportes", exist_ok=True)
-os.makedirs("/app/Archivos/Videos", exist_ok=True)
+
 
 #Local
 app.mount("/static", StaticFiles(directory="/app/static"), name="static")
@@ -45,6 +44,9 @@ print(current_directory.stdout.strip())
 print(list_directory.stdout.strip())
 
 
+os.makedirs("/app/Archivos/Reportes", exist_ok=True)
+os.makedirs("/app/Archivos/Videos", exist_ok=True)
+
 # Habilitar CORS
 app.add_middleware(
     CORSMiddleware,
@@ -55,9 +57,9 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-def get_frontend():
-    return FileResponse("indexerror1.html")
+#@app.get("/")
+#def get_frontend():
+#    return FileResponse("index.html")
 
 # Crear carpeta para reportes y videos
 #os.makedirs("/app/Archivos/Reportes", exist_ok=True)
@@ -72,10 +74,10 @@ features = []#Cantidad de personas en la imagen
 templates = Jinja2Templates(directory="static") 
 
 # Página principal
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
+#@app.get("/", response_class=HTMLResponse)
+#async def home(request: Request):
      # Renderiza el archivo index.html desde la carpeta templates
-    return templates.TemplateResponse("indexerror2.html", {"request": request})
+#    return templates.TemplateResponse("index.html", {"request": request})
 
 # WebSocket para procesar frames en tiempo real
 @app.websocket("/ws")
