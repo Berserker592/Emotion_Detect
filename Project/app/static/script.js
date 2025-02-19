@@ -3,8 +3,12 @@ let isAnalyzing = true;
 let mediaRecorder;
 let recordedChunks = [];
 let isRecording = false; // Estado para controlar la grabación
-let path = 'https://riobambalimpia.com';
-let path2 = 'riobambalimpia.com';
+//let path = 'https://riobambalimpia.com';
+//let path2 = 'riobambalimpia.com';
+
+let path = 'https://emotionvisia.com';
+let path2 = 'emotionvisia.com';
+
 
 //let path = 'http://127.0.0.1';
 
