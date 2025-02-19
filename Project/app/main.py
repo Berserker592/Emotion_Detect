@@ -24,16 +24,16 @@ app = FastAPI()
 
 #Servidor
 #app.mount("/static", StaticFiles(directory="/app/static"), name="static")
-os.makedirs("/app/Reportes", exist_ok=True)
-os.makedirs("/app/Videos", exist_ok=True)
+#os.makedirs("/app/Reportes", exist_ok=True)
+#os.makedirs("/app/Videos", exist_ok=True)
 
 #Local
 app.mount("/static", StaticFiles(directory="/app/static"), name="static")
 app.mount("/Reportes", StaticFiles(directory="/app/Archivos/Reportes"), name="Reportes")
 app.mount("/Videos", StaticFiles(directory="/app/Archivos/Videos"), name="Videos")
 
-app.mount("/Reportes", StaticFiles(directory="/app/Reportes"), name="Reportes")
-app.mount("/Videos", StaticFiles(directory="/app/Videos"), name="Videos")
+#app.mount("/Reportes", StaticFiles(directory="/app/Reportes"), name="Reportes")
+#app.mount("/Videos", StaticFiles(directory="/app/Videos"), name="Videos")
 
 # Ejecutar el comando 'pwd' en el sistema
 current_directory = subprocess.run(["pwd"], capture_output=True, text=True)
