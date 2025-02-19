@@ -31,6 +31,7 @@ app.mount("/static", StaticFiles(directory="/app/static"), name="static")
 app.mount("/Reportes", StaticFiles(directory="/app/Archivos/Reportes"), name="Reportes")
 app.mount("/Videos", StaticFiles(directory="/app/Archivos/Videos"), name="Videos")
 
+print("Los archivos que se encuentran en la carpeta", os.listdir("/app/static"))
 #app.mount("/Reportes", StaticFiles(directory="/app/Archivos/Reportes"), name="Reportes")
 #app.mount("/Videos", StaticFiles(directory="/app/Archivos/Videos"), name="Videos")
 
