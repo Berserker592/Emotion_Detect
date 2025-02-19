@@ -57,7 +57,7 @@ app.add_middleware(
 
 @app.get("/")
 def get_frontend():
-    return FileResponse("/app/static/index.html")
+    return FileResponse("/static/index.html")
 
 # Crear carpeta para reportes y videos
 #os.makedirs("/app/Archivos/Reportes", exist_ok=True)
@@ -69,7 +69,7 @@ analyzing = True
 emotion_log = [] 
 features = []#Cantidad de personas en la imagen
 
-templates = Jinja2Templates(directory="/app/static") 
+templates = Jinja2Templates(directory="static") 
 
 # Página principal
 @app.get("/", response_class=HTMLResponse)
