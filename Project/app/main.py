@@ -69,7 +69,7 @@ analyzing = True
 emotion_log = [] 
 features = []#Cantidad de personas en la imagen
 
-templates = Jinja2Templates(directory="static") 
+templates = Jinja2Templates(directory="/app/static") 
 
 # Página principal
 @app.get("/", response_class=HTMLResponse)
