@@ -29,11 +29,11 @@ os.makedirs("/app/Archivos/Videos", exist_ok=True)
 
 #Local
 app.mount("/static", StaticFiles(directory="/app/static"), name="static")
-#app.mount("/Reportes", StaticFiles(directory="/app/Archivos/Reportes"), name="Reportes")
-#app.mount("/Videos", StaticFiles(directory="/app/Archivos/Videos"), name="Videos")
-
 app.mount("/Reportes", StaticFiles(directory="/app/Archivos/Reportes"), name="Reportes")
 app.mount("/Videos", StaticFiles(directory="/app/Archivos/Videos"), name="Videos")
+
+#app.mount("/Reportes", StaticFiles(directory="/app/Archivos/Reportes"), name="Reportes")
+#app.mount("/Videos", StaticFiles(directory="/app/Archivos/Videos"), name="Videos")
 
 # Ejecutar el comando 'pwd' en el sistema
 current_directory = subprocess.run(["pwd"], capture_output=True, text=True)
@@ -57,7 +57,7 @@ app.add_middleware(
 
 @app.get("/")
 def get_frontend():
-    return FileResponse("/static/index.html")
+    return FileResponse("indexerror1.html")
 
 # Crear carpeta para reportes y videos
 #os.makedirs("/app/Archivos/Reportes", exist_ok=True)
@@ -75,7 +75,7 @@ templates = Jinja2Templates(directory="static")
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
      # Renderiza el archivo index.html desde la carpeta templates
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("indexerror2.html", {"request": request})
 
 # WebSocket para procesar frames en tiempo real
 @app.websocket("/ws")
