@@ -24,16 +24,16 @@ app = FastAPI()
 
 #Servidor
 #app.mount("/static", StaticFiles(directory="/app/static"), name="static")
-#os.makedirs("/app/Reportes", exist_ok=True)
-#os.makedirs("/app/Videos", exist_ok=True)
+os.makedirs("/home/admin/Reportes", exist_ok=True)
+os.makedirs("/home/admin/Videos", exist_ok=True)
 
 #Local
 app.mount("/static", StaticFiles(directory="/app/static"), name="static")
-app.mount("/Reportes", StaticFiles(directory="/app/Archivos/Reportes"), name="Reportes")
-app.mount("/Videos", StaticFiles(directory="/app/Archivos/Videos"), name="Videos")
+#app.mount("/Reportes", StaticFiles(directory="/app/Archivos/Reportes"), name="Reportes")
+#app.mount("/Videos", StaticFiles(directory="/app/Archivos/Videos"), name="Videos")
 
-#app.mount("/Reportes", StaticFiles(directory="/app/Reportes"), name="Reportes")
-#app.mount("/Videos", StaticFiles(directory="/app/Videos"), name="Videos")
+app.mount("/Reportes", StaticFiles(directory="/home/admin/Reportes"), name="Reportes")
+app.mount("/Videos", StaticFiles(directory="/home/admin/Videos"), name="Videos")
 
 # Ejecutar el comando 'pwd' en el sistema
 current_directory = subprocess.run(["pwd"], capture_output=True, text=True)
@@ -60,8 +60,8 @@ def get_frontend():
     return FileResponse("index.html")
 
 # Crear carpeta para reportes y videos
-os.makedirs("/app/Archivos/Reportes", exist_ok=True)
-os.makedirs("/app/Archivos/Videos", exist_ok=True)
+#os.makedirs("/app/Archivos/Reportes", exist_ok=True)
+#os.makedirs("/app/Archivos/Videos", exist_ok=True)
 
 
 # Variables globales para gestionar el análisis
@@ -207,8 +207,8 @@ async def save_analysis(
     #timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     timestamp = datetime.now().strftime("%d_%m_%Y")   
     
-    report_path = f"/app/Archivos/Reportes/RP_{Input_Name}_{timestamp}.csv"
-    video_path = f"/app/Archivos/Videos/VD_{Input_Name}_{timestamp}.webm"
+    report_path = f"/home/admin/Reportes/RP_{Input_Name}_{timestamp}.csv"
+    video_path = f"/home/admin/Videos/VD_{Input_Name}_{timestamp}.webm"
     
     #video_path = f"Videos/{video.filename}"#captured_video.webm
     
@@ -277,13 +277,13 @@ async def save_analysis(
 
 @app.get("/list-reports/")
 async def list_reports():
-    reports = os.listdir("/app/Archivos/Reportes/")
-    videos = os.listdir("/app/Archivos/Videos/")
+    reports = os.listdir("/home/admin/Reportes/")
+    videos = os.listdir("/home/admin/Videos/")
     return {"reports": reports, "videos": videos}
 
 
 # Ruta donde se almacenan los reportes
-REPORTS_DIR = Path("/app/Archivos/Reportes")
+REPORTS_DIR = Path("/home/admin/Reportes")
 
 @app.get("/get-report/{report_name}")
 async def get_report(report_name: str):
