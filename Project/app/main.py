@@ -61,7 +61,7 @@ app.add_middleware(
 
 @app.get("/")
 def get_frontend():
-    return FileResponse("/static/index.html")
+    return FileResponse("/app/static/index.html")
 
 # Crear carpeta para reportes y videos
 #os.makedirs("/app/Archivos/Reportes", exist_ok=True)
