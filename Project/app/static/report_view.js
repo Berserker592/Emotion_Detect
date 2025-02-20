@@ -1,5 +1,5 @@
-let path = 'http://127.0.0.1';
 
+let path = 'https://emotionvisia.com';
 
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
