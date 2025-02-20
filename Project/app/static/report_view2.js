@@ -1,5 +1,5 @@
 //let path = 'http://127.0.0.1';
-let path = 'http://riobambalimpia.com';
+let path = 'https://emotionvisia.com';
     
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // Obtener datos del reporte
-    fetch(`${path}:8000/get-report/${reportName}`)
+    fetch(`${path}/get-report/${reportName}`)
         .then(response => response.json())
         .then(data => {
             if (!data || data.length === 0) {
