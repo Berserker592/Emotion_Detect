@@ -47,7 +47,7 @@ header p {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-    width: 85%;
+    width: 60%;
     max-width: 900px;
     margin: 20px 0;
 }
@@ -87,6 +87,17 @@ video {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     width: 85%;
+}
+
+.chart_report {
+    background: #f2eeee;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+    display: block; /* Para asegurarse de que los elementos canvas se muestran como bloques */
+    margin: 0 auto; /* Centra las gráficas si es necesario */
+
 }
 
 .chart {
