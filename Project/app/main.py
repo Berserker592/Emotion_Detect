@@ -134,7 +134,7 @@ async def websocket_endpoint(websocket: WebSocket):
                            
         except NameError as e:
             print("Error 1:")
-            break
+            #break
     
     #await websocket.close()
 
@@ -263,6 +263,46 @@ async def save_analysis(
         
     except Exception as e:
         return {"message": f"Error al guardar el video: {str(e)}"}   
+
+# Endpoint para guardar análisis y reporte
+@app.post("/save-analysis-report/")
+async def save_analysis(
+    patient_name: str = Form(...)
+    ):
+    global emotion_log
+    
+    Input_Name = patient_name.replace(" ", "_").replace("/", "_")  # Asegúrate de que el nombre sea válido para un archivo
+    
+    if not patient_name.strip():
+        return {"message": "El nombre del paciente no puede estar vacío"}
+
+    #timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now().strftime("%d_%m_%Y")   
+    
+    report_path = f"Archivos/Reportes/RP_{Input_Name}_{timestamp}.csv"
+    
+    #video_path = f"Videos/{video.filename}"#captured_video.webm
+    
+    if not emotion_log:
+        return {"message": "No hay datos para guardar"}
+    
+    analyzed_log, abrupt_changes = analyze_emotions(emotion_log)
+
+    # Guardar reporte en CSV
+    try:
+        with open(report_path, mode="w", newline="") as file:
+            writer = csv.DictWriter(
+                file, 
+                fieldnames=["time", "emotion", "duration_since_last", "abrupt_change"]
+            )
+            writer.writeheader()
+            writer.writerows(analyzed_log)
+            emotion_log = []  # Limpiar el log después de guardar
+                     
+            return {"message": f"Reporte guardado en {report_path}"}
+        
+    except Exception as e:
+        return {"message": f"Error al guardar el reporte: {str(e)}"}   
 
 #    emotion_log = []  # Limpiar el log después de guardar
 #    return {"message": f"Reporte guardado en {report_path}, Video guardado en {video_path}"}
