@@ -1,6 +1,6 @@
-//let path = 'http://127.0.0.1';
 let path = 'https://emotionvisia.com';
-    
+//let path = 'http://127.0.0.1';
+
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const reportName = urlParams.get("report");
@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 options: {
                     responsive: true,
+                    
                     plugins: {
                         tooltip: {
                             callbacks: {
@@ -86,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             ticks: {
                                 // Mostrar solo ciertos intervalos de tiempo
                                 autoSkip: true, // Activar el salto automático de etiquetas
-                                maxTicksLimit: 10, // Número máximo de etiquetas en el eje X
+                                maxTicksLimit: 20, // Número máximo de etiquetas en el eje X
                                 maxRotation: 0, // Evitar rotación de las etiquetas
                                 callback: function(value, index, values) {
                                     // Mostrar solo cada 20 segundos (o el intervalo que desees)
