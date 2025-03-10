@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #166d96, #1d1d1f);
+    background: linear-gradient(135deg, #ffffff, #1d1d1f);
     color: #fff;
     overflow-x: hidden;
 }
@@ -24,17 +24,17 @@ body {
 
 header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: -10px;
 }
 
 header h1 {
     font-size: 2.5rem;
     font-weight: 600;
-    background: -webkit-linear-gradient(45deg, #060606, #ffffff);
+    background: -webkit-linear-gradient(45deg, #060606, #0e2b12);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 header p {
@@ -47,13 +47,14 @@ header p {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-    width: 60%;
-    max-width: 900px;
-    margin: 20px 0;
+    width: 100%;
+    max-width: 500px;
+    margin: 0px 0;/*Aqui se define el salto*/
 }
 
 video {
     width: 100%;
+    max-width: 500px;
     height: auto;
 }
 
@@ -65,7 +66,7 @@ video {
 }
 
 .btn {
-    background: #166d96;
+    background: #1e2123;
     color: #fff;
     border: none;
     padding: 15px 30px;
@@ -78,9 +79,16 @@ video {
 }
 
 .btn:hover {
-    background: #274d6e;
+    background: #5b5c5d;
     transform: scale(1.05);
 }
+
+.btnret {
+    font-size: 1.2rem;
+    color: #fff;
+    text-align: justify;
+}
+
 
 .charts-container {
     display: grid;
@@ -89,12 +97,13 @@ video {
     width: 85%;
 }
 
+
 .chart_report {
     background: #f2eeee;
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-    transition: all 0.3s ease;
+    transition: all 0.133s ease;
     display: block; /* Para asegurarse de que los elementos canvas se muestran como bloques */
     margin: 0 auto; /* Centra las gráficas si es necesario */
 
@@ -103,9 +112,9 @@ video {
 .chart {
     background: #f2eeee;
     border-radius: 20px;
-    padding: 20px;
+    padding: 10px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-    transition: all 0.3s ease;
+    transition: all 0.100s ease;
 }
 
 .chart:hover {
@@ -151,52 +160,61 @@ video {
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
+  .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+  }
+  
+  .card a:hover {
+      text-decoration: underline;
+  }
 
-.card a {
-    text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-}
 
-.card a:hover {
-    text-decoration: underline;
-}
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    grid-auto-rows: minmax(10px, auto);
+  }
+  .one {
+    grid-column: 1;
+    grid-row: 1;
+    
+  }
+  .two {
+    grid-column: 2;
+    grid-row: 1;
+  }
 
-.line {
-    position: absolute;
-    background-color: rgb(43, 98, 34);
-    width: 100px; /* Longitud de la línea */
-    height: 3px;  /* Grosor de la línea */
-}
 
-#line1 {
-    top: 50px;
-    left: 50px;
-}
 
-#line2 {
-    top: 100px;
-    left: 100px;
-    transform: rotate(45deg); /* Rotación de la línea */
-}
-
-#line3 {
-    top: 50px;
-    left: 50px;
-}
-#line4 {
-    top: 50px;
-    left: 50px;
-}
-
-.rectangle {
-    position: absolute;
-    /*background-color: rgb(43, 98, 34);*/
-    border: 2px solid black;
-    width: 100px; /* Longitud de la línea */
-    height: 120px;  /* Grosor de la línea */
-}
+.wrapper2 {
+    display: grid;
+    grid-template-columns: repeat(4);
+    grid-gap: 10px;
+    grid-auto-rows: minmax(10px, auto);
+  }
+  .one2 {
+    grid-column: 1;
+    grid-row: 1;
+    
+  }
+  .two2 {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .three2 {
+    grid-column: 3;
+    grid-row: 1;
+    
+  }
+  .four2 {
+    grid-column: 4;
+    grid-row: 1;
+  }
