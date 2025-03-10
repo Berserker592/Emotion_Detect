@@ -235,7 +235,7 @@ async def save_analysis(
         )
         writer.writeheader()
         writer.writerows(analyzed_log)
-        generate_emotion_graph(report_path, analyzed_log)   
+        #generate_emotion_graph(report_path, analyzed_log)   
     
     
     #Guardar video en webm
