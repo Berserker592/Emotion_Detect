@@ -3,14 +3,9 @@ let isAnalyzing = true;
 let mediaRecorder;
 let recordedChunks = [];
 let isRecording = false; // Estado para controlar la grabación
-//let path = 'https://riobambalimpia.com';
-//let path2 = 'riobambalimpia.com';
 
 let path = 'https://emotionvisia.com';
 let path2 = 'emotionvisia.com';
-
-
-//let path = 'http://127.0.0.1';
 
 const emotionData = {};
 const labels = [];
@@ -18,6 +13,8 @@ const emotionCounts = [];
 
 const pauseButton = document.getElementById('toggle-btn');
 const saveButton = document.getElementById('saveButton');
+const saveButton2 = document.getElementById('saveButton2');
+
 const startButton = document.getElementById('startanalisis');
 const startButton2 = document.getElementById('startButton2');
 
@@ -26,14 +23,14 @@ const playanButton = document.getElementById('analyzeVideoBtn')
 const ReportsButton = document.getElementById('ReportsButton')
 const patient_name = document.getElementById('patientName')
 
+
 patient_name.style.display = 'none'
 saveButton.disabled = true;
 pauseButton.disabled = true;
-ReportsButton.disabled = false;
 
 saveButton.style.display = 'none'
+saveButton2.style.display = 'none'
 pauseButton.style.display = 'none'
-ReportsButton.style.display = 'block'
 startButton2.style.display = 'none'
 
 playButton.disabled = true;
@@ -41,7 +38,7 @@ playButton.style.display = 'none'
 
 function goBackToIndex() {
     // Redirigir a index2.html
-    window.location.href = "index.html";
+    window.location.href = "/";
 }
 //Procesar video guardado
 
@@ -316,10 +313,10 @@ document.addEventListener("DOMContentLoaded", () => {
         ws.onmessage = event => {
             const data = JSON.parse(event.data);
             if (data.emotion) {
-                document.querySelector("#emotion").innerText = "Emoción detectada: " + data.emotion + " ==> Porcentaje: " + data.percentage;
+                document.querySelector("#emotion").innerText = "Emoción detectada: " + data.emotion;
 
                 if (data.percentage) {
-                    document.querySelector("#percentage").innerText = "Porcentaje: " + data.percentage;
+                    document.querySelector("#percentage").innerText = "Porcentaje: " + data.percentage + "%";
                 }
 
                 if (data.NumeroPersonas) {
@@ -357,10 +354,11 @@ function startStream() {
     startButton.style.display = 'none'
     startButton2.style.display = 'none'
     playanButton.style.display = "none";
+
     pauseButton.style.display = 'block';
     saveButton.style.display = 'block';
+    saveButton2.style.display = 'block';
     ReportsButton.style.display = 'block';
-
 
     const placeholder = document.getElementById("placeholder");
     //const video1 = document.getElementById("video");
@@ -405,35 +403,13 @@ function startStream() {
                 const frame = canvas.toDataURL("image/jpeg");
                 ws.send(frame);
             }
-        }, 200); // Enviar frames cada 200ms
+        },133); // Enviar frames cada 200ms
     });
 }
 
 //No Utilizado todavia
 function startNewAnalysis() {
-    startButton.style.display = 'block'
-    startButton2.style.display = 'none'
-
-    startButton.disabled = false
-    // Resetear el estado para comenzar un nuevo análisis
-    isAnalyzing = true;  // Se activa el análisis de inmediato
-    isRecording = true;  // Se activa la grabación de inmediato
-
-    // Asegurarse de que el video y placeholder estén configurados correctamente
-    const placeholder = document.getElementById("placeholder");
-    const video = document.getElementById("video");
-
-    const saveButton = document.querySelector("#save-btn");
-    saveButton.disabled = false;  // Activar el botón de guardar
-    
-    // Reiniciar el flujo de grabación si es necesario
-    mediaRecorder.start();
-
-    placeholder.style.display = "none";
-    video.style.display = "block";
-
-    // Aquí se podría configurar el flujo de la cámara y otros elementos si es necesario.
-    console.log("Nuevo análisis iniciado");
+    window.location.href = "index2.html";
 }
 
 function playStream(){
@@ -457,8 +433,8 @@ function playStream(){
     playButton.style.display = 'block'
     playButton.disabled = false
     playanButton.style.display = 'none'
-    pauseButton.style.display = 'none'
-    saveButton.style.display = 'none'
+    pauseButton.style.display = 'block'
+    saveButton.style.display = 'block'
     
     pauseButton.disabled = false
     saveButton.disabled = false
@@ -529,7 +505,7 @@ function playStream(){
                 //const result = await response.json();
                 //console.log(result); // Mostrar los resultados en la consola
                 // Aquí puedes actualizar gráficos o la UI con los resultados
-            }, 200); // Procesar cada 100ms
+            }, 133); // Procesar cada 100ms
         });
     });
 }
@@ -537,7 +513,7 @@ function playStream(){
 // Función para obtener la ubicación de la cara desde el servidor
 async function fetchFaceLocation() {
     try {
-        const response = await fetch(`${path}/face-location`);
+        const response = await fetch("http://127.0.0.1:8000/face-location");
         const data = await response.json();
         if (data.Ubicacion.length === 4) {
             return data.Ubicacion; // Devolver la ubicación actualizada
@@ -600,6 +576,12 @@ function stopRecording() {
     const patient_name = document.getElementById('patientName').value;
     const patient_name2 = document.getElementById('patientName');
     
+    
+    if (isAnalyzing) {
+        alert("Por favor, primero pause la grabacion");
+        return;
+    }
+
     //Obligar al usuario a ingresar el nombre del paciente
     if (!patient_name) {
         alert("Por favor, Ingresa el nombre del paciente.");
@@ -628,6 +610,49 @@ function stopRecording() {
                 startButton.style.display = 'none';
                 startButton2.style.display = 'block';
                 saveButton.style.display = 'none';
+                saveButton2.style.display = 'none';
+
+            });
+    }
+
+
+// Detener grabación y enviar datos
+function stopRecordingR() {
+    startButton.style.display = 'none'
+    const patient_name = document.getElementById('patientName').value;
+    const patient_name2 = document.getElementById('patientName');
+    
+    if (isAnalyzing) {
+        alert("Por favor, primero pause la grabacion");
+        return;
+    }
+
+    //Obligar al usuario a ingresar el nombre del paciente
+    if (!patient_name) {
+        alert("Por favor, Ingresa el nombre del paciente.");
+        return;
+    }
+
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+    }
+
+        const formData = new FormData();
+        formData.append("patient_name", patient_name);
+
+        fetch(`${path}/save-analysis-report/`, {
+            method: "POST",
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                recordedChunks = [];
+                patient_name2.style.display = 'none';
+                startButton.style.display = 'none';
+                startButton2.style.display = 'block';
+                saveButton.style.display = 'none';
+                saveButton2.style.display = 'none';
             });
     }
 
