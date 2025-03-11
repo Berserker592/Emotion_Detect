@@ -6,7 +6,7 @@ self.addEventListener("activate", event => {
 });
 
 function startWebSocket() {
-    ws = new WebSocket(`wss://${path2}/ws`);
+    ws = new WebSocket(`wss://${path}/ws`);
 
     ws.onmessage = event => {
         // Enviar mensajes a la pestaña activa
