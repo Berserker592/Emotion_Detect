@@ -15,6 +15,10 @@ COPY app/requirements.txt /app/requirements.txt
 # Instalar dependencias de Python
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
+# Crea el directorio donde se guardarán los archivos y asigna permisos
+RUN mkdir -p $(pwd)/Archivos/Videos /Archivos/Reportes \
+    && chmod -R 777 /Archivos
+
 # Copiar la aplicación
 COPY app /app
 
