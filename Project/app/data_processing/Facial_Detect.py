@@ -43,19 +43,23 @@ async def Deteccion(frame_data: str):
         #await websocket.send_json(response)
 
         #faces_roi = None  # Variable para la región de interés (cara detectada)
+        N_personas = str(len(faces_rect)) 
 
-        for (x, y, w, h) in faces_rect:
-            # Recortar la imagen para obtener solo la región de la cara
-            faces_roi = frame[y:y+h, x:x+w]
-            #mostrar_frame(None,faces_roi)
-            #mostrar_frame(frame,faces_roi)
-            Ubicacion = [x,y,w,h]
-            Ubicacion = [int(i) for i in Ubicacion]
-        return faces_rect, faces_roi, Ubicacion
+        if N_personas == 1:
+            for (x, y, w, h) in faces_rect:
+                # Recortar la imagen para obtener solo la región de la cara
+                faces_roi = frame[y:y+h, x:x+w]
+                #mostrar_frame(None,faces_roi)
+                #mostrar_frame(frame,faces_roi)
+                Ubicacion = [x,y,w,h]
+                Ubicacion = [int(i) for i in Ubicacion]
+                return faces_rect, faces_roi, Ubicacion #rostros mapeados, rostro  segmentado, ubicacion rostro
+        else:
+            return faces_rect, frame, [0,0,0,0] #rostros mapeados, imagen general, ubicacion rostro ninguna
 
     except Exception as e:
-        i = i+1
+        print("Error en el modulo deteccion facial")
+        return faces_rect, frame, [0,0,0,0] #rostros mapeados, imagen general, ubicacion rostro ninguna
         #print(f"Error en Deteccion {i}")
         #mostrar_frame(frame,faces_roi)
-        return faces_rect, frame, [0,0,0,0]
      

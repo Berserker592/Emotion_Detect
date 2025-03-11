@@ -91,22 +91,26 @@ async def websocket_endpoint(websocket: WebSocket):
 
     while True:
         try:
+            global face_location
+            
             # Recibir frame en base64
             frame_data = await websocket.receive_text()
             
             # Detectar el rostro en caso de encontrarse
             faces_rect, faces_roi, Ubicacion = await Deteccion(frame_data)
+            
             #response = {"x": Ubicacion[0], "y": Ubicacion[1], "w": Ubicacion[2], "h": Ubicacion[3]}             
             response = Ubicacion
-            global face_location
             face_location = response
+            
             # Asegurarse si exite la deteccion de una persona                    
             N_personas = str(len(faces_rect)) 
-
+            
             #await websocket.send_json({"person_detect": value})
             
             #Reconocimiento de las emociones
             #Si se desea mas personas unir al bucle anterior
+
             #if analyzing and N_personas == '1':
             if analyzing:
                 

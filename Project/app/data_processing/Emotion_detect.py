@@ -63,12 +63,15 @@ async def emotion_analize(frame):
         emotion = emotion_translation.get(emotion, emotion)                        
         
         if percentage < 30:
-            emotion = 'Desconocida'
-        
+          percentage = 0
+          emotion = 'Desconocida'
+          emociones =[0,0,0,0,0,0,0]
+
         return percentage, emotion, emociones
+
     except Exception as e:
+        print('Error modulo deteccion de emociones')
         percentage = 0
-        emotion = 'Desconocida' 
+        emotion = 'Desconocida'
         emociones =[0,0,0,0,0,0,0]
-        #print('No se detecto nada')
         return percentage, emotion, emociones
