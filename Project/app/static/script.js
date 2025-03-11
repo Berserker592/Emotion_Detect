@@ -332,7 +332,7 @@ function updateChart(emotion, timestamp, percentage) {
         Sorpresa: 1,
         Desconocida:0
     };
-    
+
     if (!labels.includes(timestamp)) {
         labels.push(timestamp);
         if (labels.length > 30) labels.shift(); // Mantener máximo 30 puntos en el gráfico
@@ -433,6 +433,8 @@ function startNewAnalysis() {
 }
 
 function playStream(){
+    startWebSocket();
+    
     const videoUpload = document.getElementById("videoUpload");
     const uploadedVideo = document.getElementById("uploadedVideo");
     const videoCanvas = document.createElement("canvas"); // Canvas para extraer fotogramas
