@@ -320,6 +320,19 @@ function updateScatterChart(emotion, percentage, personsDetected) {
 
 
 function updateChart(emotion, timestamp, percentage) {
+
+    // Mapeo de emociones a valores en el eje Y
+    const emotionMap = {
+        Enojo: 7,
+        Miedo: 6,
+        Tristeza: 5,
+        Neutral: 4,
+        Desagrado: 3,
+        Felicidad: 2,
+        Sorpresa: 1,
+        Desconocida:0
+    };
+    
     if (!labels.includes(timestamp)) {
         labels.push(timestamp);
         if (labels.length > 30) labels.shift(); // Mantener máximo 30 puntos en el gráfico
@@ -572,6 +585,13 @@ function toggleAnalysis() {
         const tracks = stream.getTracks();
         tracks.forEach(track => track.stop());
         video.srcObject = null; // Detener el video
+
+        // Cerrar la conexion ws
+
+        if (ws) {
+            ws.close(); // Cerrar WebSocket cuando se pausa
+            console.log("Conexion WebSocket Cerrada");
+        }
         
     }
 
