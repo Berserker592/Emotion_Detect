@@ -254,6 +254,12 @@ function initializeCharts() {
             },
         },
     });
+
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/service-worker.js")
+            .then(registration => console.log("Service Worker registrado"))
+            .catch(error => console.error("Error registrando Service Worker:", error));
+    }
 }
 
 function startWebSocket() {
@@ -286,6 +292,7 @@ function startWebSocket() {
     ws.onclose = () => console.error("WebSocket cerrado. Intenta reconectarte.");
     ws.onerror = error => console.error("Error en WebSocket:", error);
 }
+
 
 
 
@@ -347,7 +354,7 @@ function updateChart(emotion, timestamp, percentage) {
         emotionChart.data.datasets[1].data.push(percentage);
         if (emotionChart.data.datasets[1].data.length > 30) emotionChart.data.datasets[1].data.shift();
     }
-    
+
     emotionChart.update();
 }
 
