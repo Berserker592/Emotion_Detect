@@ -24,8 +24,8 @@ app = FastAPI()
 
 #Servidor
 #app.mount("/static", StaticFiles(directory="/app/static"), name="static")
-os.makedirs("/home/admin/Reportes", exist_ok=True)
-os.makedirs("/home/admin/Videos", exist_ok=True)
+#os.makedirs("/home/admin/Reportes", exist_ok=True)
+#os.makedirs("/home/admin/Videos", exist_ok=True)
 
 #Local
 app.mount("/static", StaticFiles(directory="/app/static"), name="static")
@@ -75,6 +75,10 @@ features = []#Cantidad de personas en la imagen
 
 templates = Jinja2Templates(directory="static") 
 
+# Ajusta el tamaño máximo de los frames, por ejemplo a 10MB
+max_size = 10 * 1024 * 1024  # 10MB
+
+
 # Página principal
 #@app.get("/", response_class=HTMLResponse)
 #async def home(request: Request):
@@ -86,25 +90,29 @@ templates = Jinja2Templates(directory="static")
 async def websocket_endpoint(websocket: WebSocket):
     global analyzing, emotion_log,start_an
     start_an = datetime.now()
-    await websocket.accept()
+    await websocket.accept(max_size=max_size)
     
 
     while True:
         try:
             global face_location
             
-            # Recibir frame en base64
-            frame_data = await websocket.receive_text()
+            try:
+                # Recibir frame en base64
+                frame_data = await websocket.receive_text()
+            except:
+                print('Error al recibir el fotograma')
+
             
             # Detectar el rostro en caso de encontrarse
             faces_rect, faces_roi, Ubicacion = await Deteccion(frame_data)
             
-            #response = {"x": Ubicacion[0], "y": Ubicacion[1], "w": Ubicacion[2], "h": Ubicacion[3]}             
-            response = Ubicacion
-            face_location = response
-            
             # Asegurarse si exite la deteccion de una persona                    
             N_personas = str(len(faces_rect)) 
+            
+            #response = {"x": Ubicacion[0], "y": Ubicacion[1], "w": Ubicacion[2], "h": Ubicacion[3]}             
+            #response = Ubicacion
+            #face_location = response
             
             #await websocket.send_json({"person_detect": value})
             
@@ -130,15 +138,20 @@ async def websocket_endpoint(websocket: WebSocket):
                            'percentage':percentage,
                            "NumeroPersonas":N_personas,
                            'Tiempo':tiempo,
-                           'emociones':emociones,
-                           'Ubicacion': response}   
+                           'emociones':emociones}   
             await websocket.send_json(data_to_send)
             
             #return {"message": f"Rostro no encontrado {e}"}
                            
         except NameError as e:
             print("Error 1:")
+            print('Error Cliente Desconectado')
+            print("Guardando reporte")
+            save_analysis(Archivo_Backup)
+            
+            pass
             #break
+
     
     #await websocket.close()
 
