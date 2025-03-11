@@ -3,6 +3,7 @@ let isAnalyzing = true;
 let mediaRecorder;
 let recordedChunks = [];
 let isRecording = false; // Estado para controlar la grabación
+let emotionChart, emotionScatterChart, emotionPolarChart; // Variables globales para los gráficos
 
 let path = 'https://emotionvisia.com';
 let path2 = 'emotionvisia.com';
@@ -24,16 +25,15 @@ const ReportsButton = document.getElementById('ReportsButton')
 const patient_name = document.getElementById('patientName')
 
 
-patient_name.style.display = 'none'
 saveButton.disabled = true;
 pauseButton.disabled = true;
+playButton.disabled = true;
 
+patient_name.style.display = 'none'
 saveButton.style.display = 'none'
 saveButton2.style.display = 'none'
 pauseButton.style.display = 'none'
 startButton2.style.display = 'none'
-
-playButton.disabled = true;
 playButton.style.display = 'none'
 
 function goBackToIndex() {
@@ -44,12 +44,14 @@ function goBackToIndex() {
 
 // Inicializar el gráfico cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", () => {
-    
+    initializeCharts(); // Inicializar gráficos
+});
+
+
+function initializeCharts() {
     const ctx = document.getElementById("emotionChart").getContext("2d");
     const scatterCtx = document.getElementById("emotionScatterChart").getContext("2d");
     const polarCtx = document.getElementById("emotionPolarChart").getContext("2d");
-    //saveButton.disabled = true;
-    //pauseButton.disabled = true;
 
     const scatterData = {
         datasets: [{
@@ -131,13 +133,13 @@ document.addEventListener("DOMContentLoaded", () => {
         },
     };
 
-    const emotionScatterChart = new Chart(scatterCtx, {
+    emotionScatterChart = new Chart(scatterCtx, {
         type: "scatter",
         data: scatterData,
         options: scatterOptions,
     });
 
-    const emotionPolarChart = new Chart(polarCtx, {
+    emotionPolarChart = new Chart(polarCtx, {
         type: 'polarArea',
         data: {
             labels: [
@@ -185,11 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });    
 
-    // Actualización dinámica del gráfico polar
-    function updatePolarChart(emotion) {
-        emotionPolarChart.data.datasets[0].data = emotion;
-        emotionPolarChart.update();
-    }
+    
 
     // Simular datos dinámicos desde el WebSocket
     //setInterval(() => {
@@ -197,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //    updatePolarChart(simulatedData);
     //}, 5000); // Actualiza cada 5 segundos
 
-    const emotionChart = new Chart(ctx, {
+    emotionChart = new Chart(ctx, {
         type: "line",
         data: {
             labels: labels,
@@ -256,94 +254,103 @@ document.addEventListener("DOMContentLoaded", () => {
             },
         },
     });
+}
+
+function startWebSocket() {
+    ws = new WebSocket(`wss://${path2}/ws`);
+    
+    ws.onmessage = event => {
+        const data = JSON.parse(event.data);
+        if (data.emotion) {
+            document.querySelector("#emotion").innerText = "Emoción detectada: " + data.emotion;
+
+            if (data.percentage) {
+                document.querySelector("#percentage").innerText = "Porcentaje: " + data.percentage + "%";
+            }
+
+            if (data.NumeroPersonas) {
+                document.querySelector("#NumeroPersonas").innerText = "Personas Detectadas: " + data.NumeroPersonas;
+            }
+
+            if (data.Tiempo) {
+                document.querySelector("#endan").innerText = "Tiempo Transcurrido: " + data.Tiempo;
+            }
+
+            const currentTime = new Date().toLocaleTimeString();
+            updateChart(data.emotion, currentTime, data.percentage, data.NumeroPersonas);
+            updateScatterChart(data.emotion, data.percentage, data.NumeroPersonas);
+            updatePolarChart(data.emociones);
+            
+        }
+    };
+    ws.onclose = () => console.error("WebSocket cerrado. Intenta reconectarte.");
+    ws.onerror = error => console.error("Error en WebSocket:", error);
+}
 
 
 
     // Actualizar datos del gráfico de dispersión
-    function updateScatterChart(emotion, percentage, personsDetected) {
-        const emotionMap = {
-            Enojo: 7,
-            Miedo: 6,
-            Tristeza: 5,
-            Neutral: 4,
-            Desagrado: 3,
-            Felicidad: 2,
-            Sorpresa: 1,
-            Desconocida: 0,
-        };
+function updateScatterChart(emotion, percentage, personsDetected) {
+    const emotionMap = {
+        Enojo: 7,
+        Miedo: 6,
+        Tristeza: 5,
+        Neutral: 4,
+        Desagrado: 3,
+        Felicidad: 2,
+        Sorpresa: 1,
+        Desconocida: 0,
+    };
 
-        const emotionValue = emotionMap[emotion] ?? null;
-        if (emotionValue !== null) {
-            emotionScatterChart.data.datasets[0].data.push({
-                x: emotionValue,
-                y: percentage,
-                r: personsDetected ? personsDetected * 2 : 5, // Tamaño del punto
-            });
+    const emotionValue = emotionMap[emotion] ?? null;
+    if (emotionValue !== null) {
+        emotionScatterChart.data.datasets[0].data.push({
+            x: emotionValue,
+            y: percentage,
+            r: personsDetected ? personsDetected * 2 : 5, // Tamaño del punto
+        });
 
-            //if (emotionScatterChart.data.datasets[0].data.length > 30) {
-            //    emotionScatterChart.data.datasets[0].data.shift(); // Limitar la cantidad de puntos
-            //}
+        //if (emotionScatterChart.data.datasets[0].data.length > 30) {
+        //    emotionScatterChart.data.datasets[0].data.shift(); // Limitar la cantidad de puntos
+        //}
 
-            emotionScatterChart.update();
-        }
+        emotionScatterChart.update();
+    }
+}
+
+
+function updateChart(emotion, timestamp, percentage) {
+    if (!labels.includes(timestamp)) {
+        labels.push(timestamp);
+        if (labels.length > 30) labels.shift(); // Mantener máximo 30 puntos en el gráfico
     }
 
-
-    function updateChart(emotion, timestamp, percentage) {
-        if (!labels.includes(timestamp)) {
-            labels.push(timestamp);
-            if (labels.length > 30) labels.shift(); // Mantener máximo 30 puntos en el gráfico
-        }
-
-        const emotionValue = emotionMap[emotion] ?? null;
-        if (emotionValue !== null) {
-            emotionValues.push(emotionValue);
-            if (emotionValues.length > 30) emotionValues.shift(); // Limitar la longitud del dataset
-        }
-        if (percentage !== null) {
-            percentageValues.push(percentage);
-            if (percentageValues.length > 30) percentageValues.shift(); // Limitar la longitud del dataset para el porcentaje
-        }
-        emotionChart.update();
+    const emotionValue = emotionMap[emotion] ?? null;
+    if (emotionValue !== null) {
+        emotionValues.push(emotionValue);
+        if (emotionValues.length > 30) emotionValues.shift(); // Limitar la longitud del dataset
     }
-
-    function startWebSocket() {
-        ws = new WebSocket(`wss://${path2}/ws`);
-        
-        ws.onmessage = event => {
-            const data = JSON.parse(event.data);
-            if (data.emotion) {
-                document.querySelector("#emotion").innerText = "Emoción detectada: " + data.emotion;
-
-                if (data.percentage) {
-                    document.querySelector("#percentage").innerText = "Porcentaje: " + data.percentage + "%";
-                }
-
-                if (data.NumeroPersonas) {
-                    document.querySelector("#NumeroPersonas").innerText = "Personas Detectadas: " + data.NumeroPersonas;
-                }
-
-                if (data.Tiempo) {
-                    document.querySelector("#endan").innerText = "Tiempo Transcurrido: " + data.Tiempo;
-                }
-
-                const currentTime = new Date().toLocaleTimeString();
-                updateChart(data.emotion, currentTime, data.percentage, data.NumeroPersonas);
-                updateScatterChart(data.emotion, data.percentage, data.NumeroPersonas);
-                updatePolarChart(data.emociones);
-                
-            }
-        };
-        ws.onclose = () => console.error("WebSocket cerrado. Intenta reconectarte.");
-        ws.onerror = error => console.error("Error en WebSocket:", error);
+    if (percentage !== null) {
+        percentageValues.push(percentage);
+        if (percentageValues.length > 30) percentageValues.shift(); // Limitar la longitud del dataset para el porcentaje
     }
+    emotionChart.update();
+}
 
-    startWebSocket();
-});
+
+// Actualización dinámica del gráfico polar
+function updatePolarChart(emotion) {
+    emotionPolarChart.data.datasets[0].data = emotion;
+    emotionPolarChart.update();
+}
+
 
 
 // Función para iniciar la transmisión de video y análisis
 function startStream() {
+    startWebSocket();
+    console.log('Conexion Websocket abierta')
+
     const video = document.querySelector("#video");
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
