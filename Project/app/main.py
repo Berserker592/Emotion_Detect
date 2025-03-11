@@ -75,9 +75,6 @@ features = []#Cantidad de personas en la imagen
 
 templates = Jinja2Templates(directory="static") 
 
-# Ajusta el tamaño máximo de los frames, por ejemplo a 10MB
-max_size = 10 * 1024 * 1024  # 10MB
-
 
 # Página principal
 #@app.get("/", response_class=HTMLResponse)
@@ -90,7 +87,7 @@ max_size = 10 * 1024 * 1024  # 10MB
 async def websocket_endpoint(websocket: WebSocket):
     global analyzing, emotion_log,start_an
     start_an = datetime.now()
-    await websocket.accept(max_size=max_size)
+    await websocket.accept()
     
 
     while True:
