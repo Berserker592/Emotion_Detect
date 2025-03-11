@@ -333,20 +333,21 @@ function updateChart(emotion, timestamp, percentage) {
         Desconocida:0
     };
 
-    if (!labels.includes(timestamp)) {
-        labels.push(timestamp);
-        if (labels.length > 30) labels.shift(); // Mantener máximo 30 puntos en el gráfico
+    if (!emotionChart.data.labels.includes(timestamp)) {
+        emotionChart.data.labels.push(timestamp);
+        if (emotionChart.data.labels.length > 30) emotionChart.data.labels.shift();
     }
 
     const emotionValue = emotionMap[emotion] ?? null;
     if (emotionValue !== null) {
-        emotionValues.push(emotionValue);
-        if (emotionValues.length > 30) emotionValues.shift(); // Limitar la longitud del dataset
+        emotionChart.data.datasets[0].data.push(emotionValue);
+        if (emotionChart.data.datasets[0].data.length > 30) emotionChart.data.datasets[0].data.shift();
     }
     if (percentage !== null) {
-        percentageValues.push(percentage);
-        if (percentageValues.length > 30) percentageValues.shift(); // Limitar la longitud del dataset para el porcentaje
+        emotionChart.data.datasets[1].data.push(percentage);
+        if (emotionChart.data.datasets[1].data.length > 30) emotionChart.data.datasets[1].data.shift();
     }
+    
     emotionChart.update();
 }
 
@@ -434,7 +435,7 @@ function startNewAnalysis() {
 
 function playStream(){
     startWebSocket();
-    
+
     const videoUpload = document.getElementById("videoUpload");
     const uploadedVideo = document.getElementById("uploadedVideo");
     const videoCanvas = document.createElement("canvas"); // Canvas para extraer fotogramas
