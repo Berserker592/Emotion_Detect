@@ -6,5 +6,5 @@ services:
     ports:
       - "8000:8000"  # Mapea el puerto 8000 del contenedor al 8000 del host
     volumes:
-      - ./Archivos:/app/Archivos  # Mapea la carpeta local a la del contenedor
+      - .:/app  # Mapea la carpeta local a la del contenedor
     restart: always  # Reinicia el contenedor en caso de error
