@@ -124,6 +124,7 @@ async def process_frames(websocket: WebSocket):
                 'Tiempo': tiempo,
                 'emociones': emociones}
             print('Hasta aqui si funciona')
+            print('datos a enviar', data_to_send)
             await websocket.send_json(data_to_send)
         
         except Exception as e:
@@ -204,9 +205,11 @@ async def websocket_endpoint(websocket: WebSocket):
         except WebSocketDisconnect:
             print('Cliente Desconectado. Guardando Reporte.....')
             save_analysis("Archivo_Recuperado")
+            break
 
         except Exception as e:
             print(f"Error en WebSocket: {e}")
+            break
     
     #await websocket.close()
 
