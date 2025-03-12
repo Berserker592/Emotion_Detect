@@ -431,7 +431,7 @@ function startStream() {
                 const frame = canvas.toDataURL("image/jpeg");
                 ws.send(frame);
             }
-        },2000); // Enviar frames cada 200ms
+        },133); // Enviar frames cada 200ms
     });
 }
 

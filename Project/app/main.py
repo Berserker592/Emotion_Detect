@@ -1,7 +1,8 @@
 import os
 import csv
+import asyncio 
 from datetime import datetime
-from fastapi import FastAPI, WebSocket, UploadFile, File, Form
+from fastapi import FastAPI, WebSocket, UploadFile, File, Form, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -12,6 +13,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pathlib import Path
 import matplotlib.pyplot as plt
+from concurrent.futures import ThreadPoolExecutor
 from data_processing.Facial_Detect import Deteccion
 from data_processing.Emotion_detect import emotion_analize
 
@@ -82,6 +84,8 @@ templates = Jinja2Templates(directory="static")
      # Renderiza el archivo index.html desde la carpeta templates
 #    return templates.TemplateResponse("index.html", {"request": request})
 
+
+executor = ThreadPoolExecutor()
 # WebSocket para procesar frames en tiempo real
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -100,9 +104,13 @@ async def websocket_endpoint(websocket: WebSocket):
             except:
                 print('Error al recibir el fotograma')
 
+            # Procesar la detección en un hilo separado
+            loop = asyncio.get_running_loop()
+            faces_rect, faces_roi, Ubicacion = await loop.run_in_executor(executor, Deteccion, frame_data)
             
+            #Code reemplace up
             # Detectar el rostro en caso de encontrarse
-            faces_rect, faces_roi, Ubicacion = await Deteccion(frame_data)
+            #faces_rect, faces_roi, Ubicacion = await Deteccion(frame_data)
             
             # Asegurarse si exite la deteccion de una persona                    
             N_personas = str(len(faces_rect)) 
@@ -118,39 +126,66 @@ async def websocket_endpoint(websocket: WebSocket):
 
             #if analyzing and N_personas == '1':
             if analyzing:
-                
+
+                # Crear una tarea en segundo plano para el análisis de emociones
+                task = asyncio.create_task(analizar_emocion(faces_roi, websocket, N_personas))
+
+                #Code Up
                 # Espera de los datos de el analisis
-                percentage, emotion, emociones = await emotion_analize(faces_roi)
+                #percentage, emotion, emociones = await emotion_analize(faces_roi)
                 
-                emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
+                #Code Up
+                #emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
                     
             else:
                 emotion = 'Desconocida'
                 percentage = '0'
                 emociones = [0,0,0,0,0,0,0]
-            
-            end_an = datetime.now()
-            tiempo = str(end_an-start_an)
-            data_to_send = {'emotion':emotion,
-                           'percentage':percentage,
-                           "NumeroPersonas":N_personas,
-                           'Tiempo':tiempo,
-                           'emociones':emociones}   
-            await websocket.send_json(data_to_send)
+
+                # Enviar respuesta sin análisis
+                await enviar_respuesta(websocket, emotion, percentage, N_personas, emociones)
+
+            #Code Up
+            #end_an = datetime.now()
+            #tiempo = str(end_an-start_an)
+            #data_to_send = {'emotion':emotion,
+            #               'percentage':percentage,
+            #               "NumeroPersonas":N_personas,
+            #               'Tiempo':tiempo,
+            #               'emociones':emociones}   
+            #await websocket.send_json(data_to_send)
             
             #return {"message": f"Rostro no encontrado {e}"}
                            
-        except NameError as e:
-            print("Error 1:")
-            print('Error Cliente Desconectado')
-            print("Guardando reporte")
+        except WebSocketDisconnect:
+            print('Cliente Desconectado. Guardando Reporte.....')
             save_analysis(Archivo_Backup)
-            
-            pass
-            #break
-
+            break
     
     #await websocket.close()
+
+# Función para analizar la emoción en segundo plano
+async def analizar_emocion(faces_roi, websocket, N_personas):
+    loop = asyncio.get_running_loop()
+    percentage, emotion, emociones = await loop.run_in_executor(executor, emotion_analize, faces_roi)
+    
+    emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
+
+    await enviar_respuesta(websocket, emotion, percentage, N_personas, emociones)
+
+# Función para enviar la respuesta al cliente
+async def enviar_respuesta(websocket, emotion, percentage, N_personas, emociones):
+    end_an = datetime.now()
+    tiempo = str(end_an - start_an)
+
+    data_to_send = {
+        'emotion': emotion,
+        'percentage': percentage,
+        "NumeroPersonas": N_personas,
+        'Tiempo': tiempo,
+        'emociones': emociones
+    }
+    await websocket.send_json(data_to_send)
 
 @app.get("/face-location")
 async def get_face_location():
