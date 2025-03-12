@@ -106,11 +106,11 @@ async def websocket_endpoint(websocket: WebSocket):
 
             # Procesar la detección en un hilo separado
             loop = asyncio.get_running_loop()
-            faces_rect, faces_roi, Ubicacion = await loop.run_in_executor(executor, Deteccion, frame_data)
+            #faces_rect, faces_roi, Ubicacion = await loop.run_in_executor(executor, Deteccion, frame_data)
             
             #Code reemplace up
             # Detectar el rostro en caso de encontrarse
-            #faces_rect, faces_roi, Ubicacion = await Deteccion(frame_data)
+            faces_rect, faces_roi, Ubicacion = await Deteccion(frame_data)
             
             # Asegurarse si exite la deteccion de una persona                    
             N_personas = str(len(faces_rect)) 
