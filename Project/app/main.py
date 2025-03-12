@@ -104,11 +104,11 @@ async def websocket_endpoint(websocket: WebSocket):
             except:
                 print('Error al recibir el fotograma')
 
+            # CODE
             # Procesar la detección en un hilo separado
-            loop = asyncio.get_running_loop()
-            #faces_rect, faces_roi, Ubicacion = await loop.run_in_executor(executor, Deteccion, frame_data)
-            
-            #Code reemplace up
+            # loop = asyncio.get_running_loop()
+            # faces_rect, faces_roi, Ubicacion = await loop.run_in_executor(executor, Deteccion, frame_data)
+    
             # Detectar el rostro en caso de encontrarse
             faces_rect, faces_roi, Ubicacion = await Deteccion(frame_data)
             
@@ -126,36 +126,34 @@ async def websocket_endpoint(websocket: WebSocket):
 
             #if analyzing and N_personas == '1':
             if analyzing:
-
+ 
+                # CODE
                 # Crear una tarea en segundo plano para el análisis de emociones
-                task = asyncio.create_task(analizar_emocion(faces_roi, websocket, N_personas))
+                # task = asyncio.create_task(analizar_emocion(faces_roi, websocket, N_personas))
 
-                #Code Up
                 # Espera de los datos de el analisis
-                #percentage, emotion, emociones = await emotion_analize(faces_roi)
-                
-                #Code Up
-                #emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
+                percentage, emotion, emociones = await emotion_analize(faces_roi)
+                emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
                     
             else:
                 emotion = 'Desconocida'
                 percentage = '0'
                 emociones = [0,0,0,0,0,0,0]
 
+                # CODE
                 # Enviar respuesta sin análisis
-                await enviar_respuesta(websocket, emotion, percentage, N_personas, emociones)
+                # await enviar_respuesta(websocket, emotion, percentage, N_personas, emociones)
 
-            #Code Up
-            #end_an = datetime.now()
-            #tiempo = str(end_an-start_an)
-            #data_to_send = {'emotion':emotion,
-            #               'percentage':percentage,
-            #               "NumeroPersonas":N_personas,
-            #               'Tiempo':tiempo,
-            #               'emociones':emociones}   
-            #await websocket.send_json(data_to_send)
+            end_an = datetime.now()
+            tiempo = str(end_an-start_an)
+            data_to_send = {'emotion':emotion,
+                           'percentage':percentage,
+                           "NumeroPersonas":N_personas,
+                           'Tiempo':tiempo,
+                           'emociones':emociones}   
+            await websocket.send_json(data_to_send)
             
-            #return {"message": f"Rostro no encontrado {e}"}
+            return {"message": f"Rostro no encontrado {e}"}
                            
         except WebSocketDisconnect:
             print('Cliente Desconectado. Guardando Reporte.....')
@@ -165,27 +163,27 @@ async def websocket_endpoint(websocket: WebSocket):
     #await websocket.close()
 
 # Función para analizar la emoción en segundo plano
-async def analizar_emocion(faces_roi, websocket, N_personas):
-    loop = asyncio.get_running_loop()
-    percentage, emotion, emociones = await loop.run_in_executor(executor, emotion_analize, faces_roi)
-    
-    emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
-
-    await enviar_respuesta(websocket, emotion, percentage, N_personas, emociones)
+#async def analizar_emocion(faces_roi, websocket, N_personas):
+#    loop = asyncio.get_running_loop()
+#    percentage, emotion, emociones = await loop.run_in_executor(executor, emotion_analize, faces_roi)
+#    
+#    emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
+#
+#    await enviar_respuesta(websocket, emotion, percentage, N_personas, emociones)
 
 # Función para enviar la respuesta al cliente
-async def enviar_respuesta(websocket, emotion, percentage, N_personas, emociones):
-    end_an = datetime.now()
-    tiempo = str(end_an - start_an)
-
-    data_to_send = {
-        'emotion': emotion,
-        'percentage': percentage,
-        "NumeroPersonas": N_personas,
-        'Tiempo': tiempo,
-        'emociones': emociones
-    }
-    await websocket.send_json(data_to_send)
+#async def enviar_respuesta(websocket, emotion, percentage, N_personas, emociones):
+#    end_an = datetime.now()
+#    tiempo = str(end_an - start_an)
+#
+#    data_to_send = {
+#        'emotion': emotion,
+#        'percentage': percentage,
+#        "NumeroPersonas": N_personas,
+#        'Tiempo': tiempo,
+#        'emociones': emociones
+#    }
+#    await websocket.send_json(data_to_send)
 
 @app.get("/face-location")
 async def get_face_location():
