@@ -84,7 +84,7 @@ templates = Jinja2Templates(directory="static")
      # Renderiza el archivo index.html desde la carpeta templates
 #    return templates.TemplateResponse("index.html", {"request": request})
 
-
+#CODE 2
 executor = ThreadPoolExecutor()
 frame_queue = asyncio.Queue()  # Cola de frames para procesar en segundo plano
 
@@ -123,6 +123,7 @@ async def process_frames(websocket: WebSocket):
                 "NumeroPersonas": N_personas,
                 'Tiempo': tiempo,
                 'emociones': emociones}
+            print('Hasta aqui si funciona')
             await websocket.send_json(data_to_send)
         
         except Exception as e:
@@ -137,20 +138,16 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     
     # Iniciar el proceso en segundo plano solo una vez
-    asyncio.create_task(process_frames(websocket))
+    asyncio.create_task(process_frames(WebSocket))
 
     while True:
         try:
             global face_location
             
-            try:
-                # Recibir frame en base64
-                frame_data = await websocket.receive_text()
-                await frame_queue.put(frame_data)  # Agregar frame a la cola
-            except Exception as Error:
-                print('Error al recibir el fotograma')
-                print(f'El error fue: {Error}')
-                break
+            # Recibir frame en base64
+            frame_data = await websocket.receive_text()
+            await frame_queue.put(frame_data)  # Agregar frame a la cola
+
             # CODE
             # Procesar la detección en un hilo separado
             # loop = asyncio.get_running_loop()
@@ -206,8 +203,10 @@ async def websocket_endpoint(websocket: WebSocket):
                            
         except WebSocketDisconnect:
             print('Cliente Desconectado. Guardando Reporte.....')
-            #save_analysis("Archivo_Recuperado")
-            break
+            save_analysis("Archivo_Recuperado")
+
+        except Exception as e:
+            print(f"Error en WebSocket: {e}")
     
     #await websocket.close()
 
