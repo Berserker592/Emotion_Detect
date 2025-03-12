@@ -87,13 +87,14 @@ templates = Jinja2Templates(directory="static")
 
 executor = ThreadPoolExecutor()
 frame_queue = asyncio.Queue()  # Cola de frames para procesar en segundo plano
+
 async def process_frames(websocket: WebSocket):
     """Proceso en segundo plano que toma frames de la cola y los analiza"""
     global analyzing, emotion_log, start_an
+    start_an = datetime.now()
 
     while True:
         frame_data = await frame_queue.get()  # Obtener frame de la cola
-        start_an = datetime.now()
         
         try:
             # Detectar rostros de forma asíncrona
@@ -112,24 +113,20 @@ async def process_frames(websocket: WebSocket):
                 emociones = [0, 0, 0, 0, 0, 0, 0]
 
             # Enviar respuesta al WebSocket
-            await enviar_respuesta(websocket, emotion, percentage, N_personas, emociones)
+            """Envía los resultados al WebSocket"""
+            end_an = datetime.now()
+            tiempo = str(end_an - start_an)
+
+            data_to_send = {
+                'emotion': emotion,
+                'percentage': percentage,
+                "NumeroPersonas": N_personas,
+                'Tiempo': tiempo,
+                'emociones': emociones}
+            await websocket.send_json(data_to_send)
         
         except Exception as e:
             print(f"Error procesando frame: {e}")
-
-async def enviar_respuesta(websocket, emotion, percentage, N_personas, emociones):
-    """Envía los resultados al WebSocket"""
-    end_an = datetime.now()
-    tiempo = str(end_an - start_an)
-
-    data_to_send = {
-        'emotion': emotion,
-        'percentage': percentage,
-        "NumeroPersonas": N_personas,
-        'Tiempo': tiempo,
-        'emociones': emociones
-    }
-    await websocket.send_json(data_to_send)
 
 
 # WebSocket para procesar frames en tiempo real
