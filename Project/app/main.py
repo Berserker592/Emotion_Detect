@@ -85,7 +85,7 @@ templates = Jinja2Templates(directory="static")
 #    return templates.TemplateResponse("index.html", {"request": request})
 
 
-executor = ThreadPoolExecutor()
+# executor = ThreadPoolExecutor()
 # WebSocket para procesar frames en tiempo real
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -153,7 +153,7 @@ async def websocket_endpoint(websocket: WebSocket):
                            'emociones':emociones}   
             await websocket.send_json(data_to_send)
             
-            return {"message": f"Rostro no encontrado {e}"}
+            #return {"message": f"Rostro no encontrado {e}"}
                            
         except WebSocketDisconnect:
             print('Cliente Desconectado. Guardando Reporte.....')
