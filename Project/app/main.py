@@ -124,8 +124,7 @@ async def process_frames(websocket: WebSocket):
                 'Tiempo': tiempo,
                 'emociones': emociones
                 }
-            print('Hasta aqui si funciona')
-            print('datos a enviar', data_to_send)
+
             await websocket.send_json(data_to_send)
         
         except Exception as e:
@@ -140,7 +139,7 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     
     # Iniciar el proceso en segundo plano solo una vez
-    asyncio.create_task(process_frames(WebSocket))
+    asyncio.create_task(process_frames(websocket))
 
     while True:
         try:
@@ -149,8 +148,6 @@ async def websocket_endpoint(websocket: WebSocket):
             # Recibir frame en base64
             frame_data = await websocket.receive_text()
             await frame_queue.put(frame_data)  # Agregar frame a la cola
-            print('la longitud es: ', len(frame_queue))
-            print('los datos son: ', frame_queue)
 
             # CODE
             # Procesar la detección en un hilo separado
