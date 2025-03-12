@@ -150,10 +150,9 @@ async def websocket_endpoint(websocket: WebSocket):
                 # Recibir frame en base64
                 frame_data = await websocket.receive_text()
                 await frame_queue.put(frame_data)  # Agregar frame a la cola
-
             except:
                 print('Error al recibir el fotograma')
-
+                break
             # CODE
             # Procesar la detección en un hilo separado
             # loop = asyncio.get_running_loop()
