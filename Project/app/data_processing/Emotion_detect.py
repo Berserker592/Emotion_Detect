@@ -47,7 +47,8 @@ async def emotion_analize(frame):
     """
     try:
         analysis = DeepFace.analyze(frame, actions=['emotion'])
-                
+        
+        print(f'Resultado del analisis: {analysis}')
         #analysis0 = DeepFace.analyze(frame,actions=['emotion'],detector_backend=backends[0], enforce_detection=False)
         #analysis2 = DeepFace.analyze(frame,actions=['age','gender',"emotion"])
                 
