@@ -86,7 +86,7 @@ templates = Jinja2Templates(directory="static")
 
 #CODE 2
 executor = ThreadPoolExecutor()
-frame_queue = asyncio.Queue()  # Cola de frames para procesar en segundo plano
+frame_queue = asyncio.Queue(maxsize=5)  # Cola de frames para procesar en segundo plano
 
 async def process_frames(websocket: WebSocket):
     """Proceso en segundo plano que toma frames de la cola y los analiza"""
@@ -138,7 +138,19 @@ async def websocket_endpoint(websocket: WebSocket):
     start_an = datetime.now()
     await websocket.accept()
     
+    async def keep_alive():
+        """Envia un mensaje vacío cada 30 segundos para mantener la conexión viva"""
+        while True:
+            await asyncio.sleep(30)  # Intervalo de 30 segundos
+            try:
+                await websocket.send_text("")  # Mantiene la conexión activa
+            except:
+                break  # Si falla, termina el loop
+    
+    asyncio.create_task(keep_alive())  # Inicia el keep-alive en segundo plano
     # Iniciar el proceso en segundo plano solo una vez
+
+    
     asyncio.create_task(process_frames(websocket))
 
     while True:
@@ -147,6 +159,11 @@ async def websocket_endpoint(websocket: WebSocket):
             
             # Recibir frame en base64
             frame_data = await websocket.receive_text()
+
+            # Si la cola está llena, descartar el frame más antiguo para evitar sobrecarga
+            if frame_queue.full():
+                frame_queue.get_nowait()
+
             await frame_queue.put(frame_data)  # Agregar frame a la cola
 
             # CODE
