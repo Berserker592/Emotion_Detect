@@ -5,11 +5,11 @@ import base64
 
 # Cargar el clasificador en cascada para la detección de rostros
 #Servidor
-try:
-    haar_cascade = cv2.CascadeClassifier('/app/haar_face.xml')
-except:
-#Local
-    haar_cascade = cv2.CascadeClassifier('app/haar_face.xml')
+#try:
+haar_cascade = cv2.CascadeClassifier('/app/haar_face.xml')
+#except:
+##Local
+#    haar_cascade = cv2.CascadeClassifier('app/haar_face.xml')
 
 def mostrar_frame(frame,frame2):
     #cv2.imshow("Imagen",frame)
@@ -53,13 +53,13 @@ async def Deteccion(frame_data: str):
                 #mostrar_frame(frame,faces_roi)
                 Ubicacion = [x,y,w,h]
                 Ubicacion = [int(i) for i in Ubicacion]
-                return faces_rect, faces_roi, Ubicacion #rostros mapeados, rostro  segmentado, ubicacion rostro
+                return N_personas, faces_roi, Ubicacion #rostros mapeados, rostro  segmentado, ubicacion rostro
         else:
-            return faces_rect, frame, [0,0,0,0] #rostros mapeados, imagen general, ubicacion rostro ninguna
+            return N_personas, frame, [0,0,0,0] #rostros mapeados, imagen general, ubicacion rostro ninguna
 
     except Exception as e:
         print("Error en el modulo deteccion facial")
-        return faces_rect, frame, [0,0,0,0] #rostros mapeados, imagen general, ubicacion rostro ninguna
+        return N_personas, frame, [0,0,0,0] #rostros mapeados, imagen general, ubicacion rostro ninguna
         #print(f"Error en Deteccion {i}")
         #mostrar_frame(frame,faces_roi)
      

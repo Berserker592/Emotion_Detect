@@ -85,50 +85,50 @@ templates = Jinja2Templates(directory="static")
 #    return templates.TemplateResponse("index.html", {"request": request})
 
 #CODE 2
-executor = ThreadPoolExecutor()
-frame_queue = asyncio.Queue(maxsize=5)  # Cola de frames para procesar en segundo plano
+#executor = ThreadPoolExecutor()
+#frame_queue = asyncio.Queue(maxsize=5)  # Cola de frames para procesar en segundo plano
 
-async def process_frames(websocket: WebSocket):
-    """Proceso en segundo plano que toma frames de la cola y los analiza"""
-    global analyzing, emotion_log, start_an
-    start_an = datetime.now()
-
-    while True:
-        frame_data = await frame_queue.get()  # Obtener frame de la cola
-        
-        try:
-            # Detectar rostros de forma asíncrona
-            faces_rect, faces_roi, Ubicacion = await Deteccion(frame_data)
-
-            # Contar personas detectadas
-            N_personas = str(len(faces_rect))
-
-            if analyzing:
-                # Analizar emociones de forma asíncrona
-                percentage, emotion, emociones = await emotion_analize(faces_roi)
-                emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
-            else:
-                emotion = 'Desconocida'
-                percentage = '0'
-                emociones = [0, 0, 0, 0, 0, 0, 0]
-
-            # Enviar respuesta al WebSocket
-            """Envía los resultados al WebSocket"""
-            end_an = datetime.now()
-            tiempo = str(end_an - start_an)
-
-            data_to_send = {
-                'emotion': emotion,
-                'percentage': percentage,
-                "NumeroPersonas": N_personas,
-                'Tiempo': tiempo,
-                'emociones': emociones
-                }
-
-            await websocket.send_json(data_to_send)
-        
-        except Exception as e:
-            print(f"Error procesando frame: {e}")
+#async def process_frames(websocket: WebSocket):
+#    """Proceso en segundo plano que toma frames de la cola y los analiza"""
+#    global analyzing, emotion_log, start_an
+#    start_an = datetime.now()
+#
+#    while True:
+#        frame_data = await frame_queue.get()  # Obtener frame de la cola
+#        
+#        try:
+#            # Detectar rostros de forma asíncrona
+#            faces_rect, faces_roi, Ubicacion = await Deteccion(frame_data)
+#
+#            # Contar personas detectadas
+#            N_personas = str(len(faces_rect))
+#
+#            if analyzing:
+#                # Analizar emociones de forma asíncrona
+#                percentage, emotion, emociones = await emotion_analize(faces_roi)
+#                emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
+#            else:
+#                emotion = 'Desconocida'
+#                percentage = '0'
+#                emociones = [0, 0, 0, 0, 0, 0, 0]
+#
+#            # Enviar respuesta al WebSocket
+#            """Envía los resultados al WebSocket"""
+#            end_an = datetime.now()
+#            tiempo = str(end_an - start_an)
+#
+#            data_to_send = {
+#                'emotion': emotion,
+#                'percentage': percentage,
+#                "NumeroPersonas": N_personas,
+#                'Tiempo': tiempo,
+#                'emociones': emociones
+#                }
+#
+#            await websocket.send_json(data_to_send)
+#        
+#        except Exception as e:
+#            print(f"Error procesando frame: {e}")
 
 
 # WebSocket para procesar frames en tiempo real
@@ -151,7 +151,7 @@ async def websocket_endpoint(websocket: WebSocket):
     # Iniciar el proceso en segundo plano solo una vez
 
     
-    asyncio.create_task(process_frames(websocket))
+    #asyncio.create_task(process_frames(websocket))
 
     while True:
         try:
@@ -160,11 +160,11 @@ async def websocket_endpoint(websocket: WebSocket):
             # Recibir frame en base64
             frame_data = await websocket.receive_text()
 
-            # Si la cola está llena, descartar el frame más antiguo para evitar sobrecarga
-            if frame_queue.full():
-                frame_queue.get_nowait()
-
-            await frame_queue.put(frame_data)  # Agregar frame a la cola
+#            # Si la cola está llena, descartar el frame más antiguo para evitar sobrecarga
+#            if frame_queue.full():
+#                frame_queue.get_nowait()
+#
+#            await frame_queue.put(frame_data)  # Agregar frame a la cola
 
             # CODE
             # Procesar la detección en un hilo separado
@@ -172,7 +172,7 @@ async def websocket_endpoint(websocket: WebSocket):
             # faces_rect, faces_roi, Ubicacion = await loop.run_in_executor(executor, Deteccion, frame_data)
     
             # Detectar el rostro en caso de encontrarse
-            #faces_rect, faces_roi, Ubicacion = await Deteccion(frame_data)
+            N_personas, faces_roi, Ubicacion = await Deteccion(frame_data)
             
             # Asegurarse si exite la deteccion de una persona                    
             
@@ -187,7 +187,7 @@ async def websocket_endpoint(websocket: WebSocket):
             #Reconocimiento de las emociones
             #Si se desea mas personas unir al bucle anterior
 
-            #if analyzing and N_personas == '1':
+            if analyzing and N_personas == '1':
             
             #if analyzing:
  
@@ -196,26 +196,26 @@ async def websocket_endpoint(websocket: WebSocket):
                 # task = asyncio.create_task(analizar_emocion(faces_roi, websocket, N_personas))
 
                 # Espera de los datos de el analisis
-            #    percentage, emotion, emociones = await emotion_analize(faces_roi)
-            #    emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
+                percentage, emotion, emociones = await emotion_analize(faces_roi)
+                emotion_log.append({"time": datetime.now().isoformat(), "emotion": emotion})
                     
-            #else:
-            #    emotion = 'Desconocida'
-            #    percentage = '0'
-            #    emociones = [0,0,0,0,0,0,0]
+            else:
+                emotion = 'Desconocida'
+                percentage = '0'
+                emociones = [0,0,0,0,0,0,0]
 
                 # CODE
                 # Enviar respuesta sin análisis
                 # await enviar_respuesta(websocket, emotion, percentage, N_personas, emociones)
 
-            #end_an = datetime.now()
-            #tiempo = str(end_an-start_an)
-            #data_to_send = {'emotion':emotion,
-            #               'percentage':percentage,
-            #               "NumeroPersonas":N_personas,
-            #               'Tiempo':tiempo,
-            #               'emociones':emociones}   
-            #await websocket.send_json(data_to_send)
+            end_an = datetime.now()
+            tiempo = str(end_an-start_an)
+            data_to_send = {'emotion':emotion,
+                           'percentage':percentage,
+                           "NumeroPersonas":N_personas,
+                           'Tiempo':tiempo,
+                           'emociones':emociones}   
+            await websocket.send_json(data_to_send)
             
             #return {"message": f"Rostro no encontrado {e}"}
                            
